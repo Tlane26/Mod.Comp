@@ -33,10 +33,10 @@ for i = 20:280
                 longitud=integral(funcion_4,x1,x4);
                 %longitud=400;
                 if(longitud<500 && longitud>300)
-                    xmax= %Calcular min
-                    xmin= %calcular max
-                    radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
-                    radio_2=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
+                    %xmax= Calcular min
+                    %xmin= calcular max
+                    %radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
+                    %radio_2=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
                     if radio < 50 && radio_2 <50 && radio > 0 && radio_2 > 0
                        disp(longitud)
                        disp(radio)
