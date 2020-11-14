@@ -1,7 +1,7 @@
 for i = 10:280
-    for n = 10:280
-        for m = 120:170
-            for j = 120:170
+    for n = 150:280
+        for m = 170:200
+            for j = 90:120
                 quit=0;
                 x1 = 10;
                 x2 = i;
@@ -20,12 +20,11 @@ for i = 10:280
                 Y = [y1; y2; y3; y4];
 
                 %matriz de soluciones
-                Z = [];
 
                 Z = inv(A) * Y;
 
 
-                if (Z(1) ~=0 && Z(2) ~=0 && Z(3) ~=0 && Z(4) ~=0)
+                if ((Z(1)>=1 || Z(1)<=-1) && (Z(2)>=1 || Z(2)<= -1 )&& (Z(3)>=1 || Z(3)<= -1) && (Z(4)>=1 || Z(4)<= -1))
                     funcion = @(X)(Z(1)*X.^3)+(Z(2)*X.^2) + (Z(3)*X)+(Z(4));
                     funcion_2=@(X) (3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3));
                     funcion_3=@(X) ((6*Z(1)*X)+(2*Z(2)));
@@ -35,23 +34,24 @@ for i = 10:280
                     if(longitud<500 && longitud>300)
                         cont=1;
                         index=1;
-                        X=[];
+                        X=[x1:x4];
                         I=[];
                         for k=x1:x4
-                            X(cont) = funcion_2(k);
-                            if X(cont)==0;
-                            I(index)=cont-1;
+                            dy = funcion_2(k);
+                            if dy==0
+                            I(index)=cont;
                             index=index + 1;
                             end
                             cont=cont+1;
                         end
                         for h=1:length(I)
-                            dx=funcion_3(I(h));
+                            L=I(h);
+                            dx=funcion_3(X(L));
                             if dx < 0
-                                xmax=I(h);
+                                xmax=X(L);
                             end
                             if dx > 0
-                                xmin=I(h);
+                                xmin=X(L);
                             end
                         end
                         radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
