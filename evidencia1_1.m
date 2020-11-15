@@ -1,7 +1,15 @@
-for i = 10:280
-    for n = 150:280
-        for m = 170:200
-            for j = 90:120
+clc
+clearvars
+
+contador=0;
+contador2=0;
+contador3=0;
+for i = 50:120
+    for n = 220:280
+        for m = 170: 210
+            for j = 60:120
+                contador=contador + 1;
+                disp(contador)
                 quit=0;
                 x1 = 10;
                 x2 = i;
@@ -24,7 +32,7 @@ for i = 10:280
                 Z = inv(A) * Y;
 
 
-                if ((Z(1)>=1 || Z(1)<=-1) && (Z(2)>=1 || Z(2)<= -1 )&& (Z(3)>=1 || Z(3)<= -1) && (Z(4)>=1 || Z(4)<= -1))
+                if (Z(1)~=0) && (Z(2)~=0 )&& (Z(3)~= 0) && (Z(4)~=0)
                     funcion = @(X)(Z(1)*X.^3)+(Z(2)*X.^2) + (Z(3)*X)+(Z(4));
                     funcion_2=@(X) (3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3));
                     funcion_3=@(X) ((6*Z(1)*X)+(2*Z(2)));
@@ -54,14 +62,32 @@ for i = 10:280
                                 xmin=X(L);
                             end
                         end
-                        radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
-                        radio_2=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
-                        if radio < 50 && radio_2 <50 && radio > 0 && radio_2 > 0
+                        contador2=contador2+1;
+                        disp(contador2)
+                        try
+                            radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
+                            radio_2=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
+                        catch
+                            radio=51;
+                            radio_2=51;
+                            contador3=contador3+1;
+                            disp(contador3)
+                        end
+                        if radio < 50 && radio_2 <50
                            disp(longitud)
                            disp(radio)
                            disp(radio_2)
                            disp(Z)
                            quit=1;
+                           Y=[];
+                            count=1;
+                            for k=x1:x4
+                                Y(count)=funcion(k);
+                                count= count+1;
+                            end
+                            plot(X,Y)
+                            disp(X)
+                            disp(Y)
                             break;
                         end
                     end
@@ -78,4 +104,6 @@ for i = 10:280
     if quit == 1
        break;
    end
-end 
+end
+
+disp(contador2)
