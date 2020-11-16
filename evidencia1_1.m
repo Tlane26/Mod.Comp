@@ -6,8 +6,9 @@ contador2=0;
 contador3=0;
 for i = 50:120
     for n = 220:280
-        for m = 170: 210
-            for j = 60:120
+    %cambie los posibles valores de j y m para cambiar la forma de la curva
+        for j = 170: 210
+            for m = 60:120
                 contador=contador + 1;
                 disp(contador)
                 quit=0;
@@ -31,8 +32,8 @@ for i = 50:120
 
                 Z = inv(A) * Y;
 
-
-                if (Z(1)~=0) && (Z(2)~=0 )&& (Z(3)~= 0) && (Z(4)~=0)
+                %quite las condiciones de los otros coeficientes, no son necesarias
+                if (Z(1)~=0))
                     funcion = @(X)(Z(1)*X.^3)+(Z(2)*X.^2) + (Z(3)*X)+(Z(4));
                     funcion_2=@(X) (3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3));
                     funcion_3=@(X) ((6*Z(1)*X)+(2*Z(2)));
@@ -43,40 +44,29 @@ for i = 50:120
                         cont=1;
                         index=1;
                         X=[x1:x4];
-                        I=[];
+                        xmin=x1
                         for k=x1:x4
+                            %En esta condicion, el primer punto critico sera el minimo
                             dy = funcion_2(k);
                             if dy==0
-                            I(index)=cont;
-                            index=index + 1;
-                            end
-                            cont=cont+1;
-                        end
-                        for h=1:length(I)
-                            L=I(h);
-                            dx=funcion_3(X(L));
-                            if dx < 0
-                                xmax=X(L);
-                            end
-                            if dx > 0
-                                xmin=X(L);
+                                xmin=k
+                                break
                             end
                         end
                         contador2=contador2+1;
                         disp(contador2)
                         try
-                            radio=((1+((funcion_2(xmax))^2))^(3/2))/(funcion_3(xmax));
-                            radio_2=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
+                            %La funcion es simetrica, solo necesitamos un radio
+                            %Elegi el minimo porque es el positivo
+                            radio=((1+(funcion_2(xmin)^2))^(3/2))/(funcion_3(xmin));
                         catch
                             radio=51;
-                            radio_2=51;
                             contador3=contador3+1;
                             disp(contador3)
                         end
-                        if radio < 50 && radio_2 <50
+                        if radio < 50
                            disp(longitud)
                            disp(radio)
-                           disp(radio_2)
                            disp(Z)
                            quit=1;
                            Y=[];
