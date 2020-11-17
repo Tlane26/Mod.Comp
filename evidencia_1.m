@@ -1,13 +1,11 @@
 close all
 clc
-hold on
 
 x1 = 10;
 x4 = 280;
 y1 = 170;
 y4 = 120;
 incx = (x4-x1)/3;
-incy = (y4-y1)/2;
 for i = 1:1:incx
     for j = 1:1:x4-incx
         quit=0;
@@ -44,19 +42,18 @@ for i = 1:1:incx
                     Y(cont)=funcion(k);
                     cont=cont+1;
                 end
-
-                try
-                    radio=((1+(funcion_2(xmax)^2))^(3/2))/(funcion_3(xmax));
-                catch
-                    radio=51;
-                end
+                radio=((1+(funcion_2(xmax)^2))^(3/2))/(funcion_3(xmax));
                 if radio < 50 && radio>-50
+ 
                     disp(longitud)
                     disp(radio)
                     disp(Z)
                     quit=1;
+                    hold on
+                    circle(xmax,funcion(xmax)-abs(radio),abs(radio))
+                    circle(xmin,funcion(xmin)+abs(radio),abs(radio))
                     plot(X,Y)
-                    disp(X)
+                    hold off
                     disp(Y)
                    break;
                 end
@@ -67,4 +64,9 @@ for i = 1:1:incx
         break;
     end
 end
-
+function h = circle(x,y,r)
+th = 0:pi/50:2*pi;
+xunit = r * cos(th) + x;
+yunit = r * sin(th) + y;
+h = plot(xunit, yunit);
+end
