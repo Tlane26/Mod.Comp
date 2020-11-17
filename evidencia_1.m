@@ -36,7 +36,7 @@ for i = 86:120
                     funcion = @(X)(Z(1)*X.^3)+(Z(2)*X.^2) + (Z(3)*X)+(Z(4));
                     funcion_2=@(X) (3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3));
                     funcion_3=@(X) ((6*Z(1)*X)+(2*Z(2)));
-                    funcion_4=@(X) sqrt((1+(((3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3))).^2)));
+                    funcion_4=@(X) sqrt((1+((funcion_2(X)).^2)));
                     longitud=integral(funcion_4,x1,x4);
                     %longitud=400;
                     if(longitud<500 && longitud>300)
