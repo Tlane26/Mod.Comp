@@ -53,6 +53,8 @@ for i = 1:1:incx
                     circle(xmax,funcion(xmax)-abs(radio),abs(radio))
                     circle(xmin,funcion(xmin)+abs(radio),abs(radio))
                     plot(X,Y)
+                    xlim([x1 x4])
+                    ylim([x1 x4])
                     hold off
                     disp(Y)
                    break;
@@ -70,3 +72,4 @@ xunit = r * cos(th) + x;
 yunit = r * sin(th) + y;
 h = plot(xunit, yunit);
 end
+
