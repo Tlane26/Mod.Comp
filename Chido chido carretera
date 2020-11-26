@@ -1,0 +1,153 @@
+close all 
+clc
+
+x1 = 10;  % coordenada x1 ya dada 
+x4 = 280; % coordenada x4 ya dada
+y1 = 170; % coordenada y1 ya dada
+y4 = 120; % coordenada y4 ya dada
+
+%Se secciona la grafica y solo se seleccionan laz zonas donde es mas
+%posible que las coordenadas correctas se encuentren para de esta forma
+incx = (x4-x1)/3;  
+for i = 1:1:incx
+    for j = 1:1:x4-incx
+        quit=0;
+        x2 = x1+i;
+        x3 = x4-i;
+        y2 = y1+j;
+        y3 = y4-j;
+
+
+        %Matriz principal
+        A = [(x1^3),(x1^2),(x1),1; (x2^3),(x2^2),(x2),1; (x3^3),(x3^2),(x3),1; (x4^3),(x4^2),(x4),1];
+
+        %Vector Y
+        Y = [y1; y2; y3; y4];
+
+        %matriz de soluciones
+        Z = inv(A) * Y;
+
+%se forma la funcion con los coeficientes que se generan en la iteracion d
+%los ciclos for rpncipales y se revisan que se cumplan las condiciones que
+%establece el reto.
+        if (Z(1)~=0 )
+            funcion = @(X)(Z(1)*X.^3)+(Z(2)*X.^2) + (Z(3)*X)+(Z(4)); %funcion principal
+            funcion_2=@(X) (3*Z(1)*X.^2)+(2*Z(2)*X) + (Z(3)); %funcion derivada para calculo del radio de curva
+            funcion_3=@(X) ((6*Z(1)*X)+(2*Z(2))); %segunda derivada para calculo del radio de curva
+            funcion_4=@(X) sqrt((1+((funcion_2(X)).^2))); %funcion de longitud de curvatura
+            longitud=integral(funcion_4,x1,x4); %se calcula la longitud
+            %se corrobora si se cumplen las condiciones de longitud de arco
+            if(longitud<500 && longitud>300)
+                cont=1;
+                X=[x1:x4];
+                Y=[];
+                xmax = (-Z(2)-sqrt(Z(2)^2-3*Z(1)*Z(3)))/(3*Z(1));
+                xmin = (-Z(2)+sqrt(Z(2)^2-3*Z(1)*Z(3)))/(3*Z(1));
+                
+                for k=x1:x4
+                    Y(cont)=funcion(k);
+                    cont=cont+1;
+                end
+                radio=((1+(funcion_2(xmax)^2))^(3/2))/(funcion_3(xmax));
+                
+                %se comprueba si el radio de curvatura cumple con las
+                %dimensiones establecidas
+                if radio < 50 && radio>-50
+                    PC1y = funcion(xmax)-abs(radio); 
+                    PC2y = funcion(xmin)+abs(radio);
+                    centerc1 = [xmax PC1y];
+                    centerc2 = [xmin PC2y];
+                    
+                    disp(longitud)
+                    disp(radio)
+                    disp(Z)
+                    quit=1;
+                    figure('Name','Armando')
+                    hold on
+                    
+                    %se grafican los circulos en los puntos criticos
+                    viscircles(centerc1, abs(radio),'color','r','LineStyle','--');
+                    viscircles(centerc2, abs(radio),'color','r','LineStyle','--');
+                    axis([7 282 50 250])
+                    plot(X,Y)
+                    hold off
+                   break;
+                end
+            end
+        end
+    end
+    if quit == 1
+        break;
+    end
+end
+
+for i = 1:1:incx
+
+    x2 = xmin - i;
+    x3 = xmax - i;
+    x4 = xmin + i;
+    x5 = xmax + i;
+    radio=((1+(funcion_2(x2)^2))^(3/2))/(funcion_3(x2));
+    radio1=((1+(funcion_2(x3)^2))^(3/2))/(funcion_3(x3));
+    radio2=((1+(funcion_2(x4)^2))^(3/2))/(funcion_3(x4));
+    radio3=((1+(funcion_2(x5)^2))^(3/2))/(funcion_3(x5));
+    
+    if radio < 50 && radio > -50
+        hold on
+        y = @(X) funcion_2(x2) * (X-x2) + funcion(x2);
+        fplot(y,[x2 x2+50])
+        hold off
+        xrec=x2;
+    end
+       
+    if radio1 < 50 && radio1 > -50
+        hold on
+        y1 = @(X) funcion_2(x3) * (X-x3) + funcion(x3);
+        fplot(y1,[x3 x3+50])
+        hold off
+        xrecm=x3;
+    end
+    
+    if radio2 < 50 && radio2 > -50
+        hold on
+        y2 = @(X) funcion_2(x4) * (X-x4) + funcion(x4);
+        fplot(y2,[x4 x4+50])
+        hold off
+        xrec2=x4;
+    end
+       
+    if radio3 < 50 && radio3 > -50
+        hold on
+        y3 = @(X) funcion_2(x5) * (X-x5) + funcion(x5);
+        fplot(y3,[x5 x5+50])
+        hold off
+        xrecm2=x5;
+    end
+
+end
+a1=atand(funcion_2(xrec));
+a2=atand(funcion_2(xrecm));
+xrec1=(xrec-abs(((20/(sind(a1))))));
+xrecm1=(xrecm-abs(((20/(sind(a2))))));
+ancho2=80*cosd(a1);
+ancho=80*cosd(a2);
+
+
+hold on
+y2 = @(X) funcion_2(xrec) * (X-xrec1) + funcion(xrec);
+y3 = @(X) funcion_2(xrecm) * (X-xrecm1) + funcion(xrecm);
+fplot(y2,[xrec-(ancho2/2) (xrec+(ancho2/2))],'color','b','LineWidth',10)
+fplot(y3,[xrecm-ancho/2 xrecm+ancho/2],'color','b','LineWidth',10)
+hold off
+
+figure('Name','Carretera')
+
+
+hold on
+plot(X,Y,'color','k','LineWidth',20)
+fplot(y2,[xrec-(ancho2/2) (xrec+(ancho2/2))],'color','b','LineWidth',10)
+fplot(y3,[xrecm-ancho/2 xrecm+ancho/2],'color','b','LineWidth',10)
+fplot(funcion,[xrec, xrec2],'color','r','LineWidth',20)
+fplot(funcion,[xrecm, xrecm2],'color','r','LineWidth',20)
+plot(X,Y,'color','y','LineStyle','--','LineWidth',4)
+hold off
